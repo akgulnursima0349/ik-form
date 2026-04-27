@@ -114,17 +114,19 @@ export function useOnboarding() {
     }
 
     try {
-      const { error } = await supabase
+      const { error, status } = await supabase
         .from('onboarding_submissions')
         .update({ [field]: data, current_step: Math.max(step + 1, submission.current_step) })
         .eq('id', submission.id);
 
+      console.log('saveStep sonuç:', { step, status, error, submissionId: submission.id });
       if (error) throw error;
       // Sadece veri alanını güncelle, current_step'i değiştirme
       // nextStep() UI'da ilerlemeyi halleder, current_step DB'de doğru kaydedildi
       setSubmission({ ...submission, [field]: data });
       return true;
-    } catch {
+    } catch (err) {
+      console.error('saveStep hatası:', err);
       toast.error('Bilgiler kaydedilemedi, tekrar deneyin');
       return false;
     } finally {
