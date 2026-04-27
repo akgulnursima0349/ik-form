@@ -3,12 +3,17 @@ import toast from 'react-hot-toast';
 import { generatePdf } from '../lib/pdf';
 import { supabase } from '../lib/supabase';
 import { useAdminStore } from '../store/adminStore';
+import { DEMO_SUBMISSIONS } from '../lib/demoData';
 
 export function useAdmin() {
   const [loading, setLoading] = useState(false);
   const { hrUser, setSubmissions, setSelectedSubmission, updateSubmissionStatus } = useAdminStore();
 
   async function fetchSubmissions() {
+    if (hrUser?.id === 'demo-hr-id') {
+      setSubmissions(DEMO_SUBMISSIONS);
+      return;
+    }
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -26,6 +31,11 @@ export function useAdmin() {
   }
 
   async function fetchSubmissionDetail(id: string) {
+    if (hrUser?.id === 'demo-hr-id') {
+      const found = DEMO_SUBMISSIONS.find((s) => s.id === id) || null;
+      setSelectedSubmission(found);
+      return found;
+    }
     setLoading(true);
     try {
       const { data, error } = await supabase

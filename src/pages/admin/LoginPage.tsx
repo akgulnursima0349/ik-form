@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
 import { useAdminStore } from '../../store/adminStore';
+import { DEMO_HR_USER } from '../../lib/demoData';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { loginSchema } from '../../lib/validations';
@@ -22,6 +23,13 @@ export function LoginPage() {
 
   const onSubmit = async (data: LoginData) => {
     setLoading(true);
+
+    if (data.email === 'demo@demo.com' && data.password === 'demo123') {
+      setHrUser(DEMO_HR_USER);
+      navigate('/admin');
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email: data.email, password: data.password });
 
     if (error) {
