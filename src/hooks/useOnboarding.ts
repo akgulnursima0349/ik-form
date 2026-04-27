@@ -114,7 +114,7 @@ export function useOnboarding() {
     }
 
     try {
-      const { error, status } = await supabase
+      const { error } = await supabase
         .from('onboarding_submissions')
         .update({ [field]: data, current_step: Math.max(step + 1, submission.current_step) })
         .eq('id', submission.id);
