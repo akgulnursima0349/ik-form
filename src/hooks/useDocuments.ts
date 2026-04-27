@@ -30,7 +30,7 @@ export function useDocuments() {
         .from('employee-documents')
         .upload(storagePath, file, { contentType: file.type });
 
-      if (storageError) throw storageError;
+      if (storageError) { console.error('Storage hatası:', storageError); throw storageError; }
 
       const { data, error: dbError } = await supabase
         .from('documents')
