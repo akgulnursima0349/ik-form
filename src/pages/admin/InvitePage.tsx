@@ -50,7 +50,8 @@ export function InvitePage() {
       return;
     }
 
-    const link = `${window.location.origin}/onboarding/${employee.token}`;
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const link = `${window.location.origin}${base}/onboarding/${employee.token}`;
     setGeneratedLink(link);
     toast.success('Davet oluşturuldu!');
     reset();
