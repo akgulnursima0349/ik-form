@@ -30,7 +30,7 @@ const DEMO_SUBMISSION = {
 
 export function useOnboarding() {
   const [loading, setLoading] = useState(false);
-  const { employee, submission, setEmployee, setSubmission } = useOnboardingStore();
+  const { employee, submission, currentStep, setEmployee, setSubmission } = useOnboardingStore();
 
   async function verifyToken(token: string) {
     if (token === 'demo') {
@@ -119,13 +119,11 @@ export function useOnboarding() {
         .update({ [field]: data, current_step: Math.max(step + 1, submission.current_step) })
         .eq('id', submission.id);
 
-      console.log('saveStep sonuç:', { step, status, error, submissionId: submission.id });
       if (error) throw error;
-      // Sadece veri alanını güncelle, current_step'i değiştirme
-      // nextStep() UI'da ilerlemeyi halleder, current_step DB'de doğru kaydedildi
-      setSubmission({ ...submission, [field]: data });
+      // current_step'i mevcut UI adımıyla koru, setSubmission sıfırlamasın
+      setSubmission({ ...submission, [field]: data, current_step: currentStep });
       return true;
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('saveStep hatası:', err);
       toast.error('Bilgiler kaydedilemedi, tekrar deneyin');
       return false;
